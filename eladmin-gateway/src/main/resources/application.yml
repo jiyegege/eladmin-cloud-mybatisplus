@@ -1,0 +1,83 @@
+server:
+  port: 19001
+
+spring:
+  application:
+    name: ty-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.211.55.25:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true
+      routes:
+        # 代码生成服务
+        - id: ty-generator
+          uri: lb://ty-generator
+          predicates:
+            - Path=/api/genConfig/**,/api/generator/**
+        # 认证授权服务
+        - id: ty-auth
+          uri: lb://ty-auth
+          predicates:
+            - Path=/api/auth/**
+
+# 配置mybatis-plus
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.roger.**.entity
+  global-config:
+    db-config:
+      #主键类型：自增
+      id-type: auto
+      #插入字段策略：非空判断
+      insert-strategy: not_null
+      #更新字段策略：非空判断
+      update-strategy: not_null
+      #查询字段策略：非空判断
+      where-strategy: not_null
+  configuration:
+    #配置返回数据库(column下划线命名&&返回java实体是驼峰命名)，自动匹配无需as（没开启这个，SQL需要写as： select user_id as userId）
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull, oracle数据库必须配置
+    jdbc-type-for-null: 'null'
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+    org.springframework.cloud.loadbalancer: debug
+    org.springframework.web.reactive: debug
+
+tianyu:
+  bdp:
+    filter:
+      #需要进行过滤的白名单
+      allowPaths:
+        - /api/search
+        - /api/auth
+        - /api/user/register
+        - /api/user/check
+        - /api/user/code
+        - /api/item
+        - /api/genConfig
+        - /api/generator
+        - /api/auth/login
+        - /*.html
+        - /**/*.html
+        - /**/*.css
+        - /**/*.js
+        - /webSocket/**
+        - /swagger-ui.html
+        - /swagger-resources/**
+        - /webjars/**
+        - /*/api-docs
+        - /avatar/**
+        - /file/**
+        - /druid/**
