@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(hidden = true)
 @SpringBootApplication
 @EnableTransactionManagement
-@ComponentScan(basePackages = {"com.roger"})
+@ComponentScan(basePackages = {"com.roger.*"})
 @EnableFeignClients(basePackages = "com.roger.api.service")
 public class EladminToolsApplication {
     public static void main(String[] args) {

@@ -21,6 +21,7 @@ import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(hidden = true)
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.roger.*"})
 @EnableTransactionManagement
 public class EladminQuartzApplication {
 

@@ -1,4 +1,4 @@
-/*
+package com.roger.mnt;/*
  *  Copyright 2019-2020 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,8 @@ import com.roger.common.core.utils.SpringContextHolder;
 import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(hidden = true)
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.roger.*"})
 @EnableTransactionManagement
 public class EladminMntApplication {
 

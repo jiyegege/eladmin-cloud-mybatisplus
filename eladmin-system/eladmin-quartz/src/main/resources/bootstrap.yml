@@ -17,7 +17,10 @@ spring:
           # 配置文件名-Data Id
           data-id: application.${spring.cloud.nacos.config.file-extension}
           # 是否动态刷新，默认为false
-          refresh: false
+          refresh: true
         # 共享配置
-        shared-configs:
-          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+        shared-configs[0]:
+          # 配置文件名-Data Id
+          data-id: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+          # 是否动态刷新，默认为false
+          refresh: true

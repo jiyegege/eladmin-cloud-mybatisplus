@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(hidden = true)
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.roger"})
+@ComponentScan(basePackages = {"com.roger.*"})
 @EnableTransactionManagement
 @EnableFeignClients(basePackages = "com.roger.api.service")
 public class EladminSystemCoreApplication {
