@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
@@ -23,5 +24,5 @@ public interface RemoteLogService {
      * @return /
      */
     @PostMapping("/api/logs")
-    ResponseEntity<Object> saveLog(@Validated SaveLogDTO saveLogDTO, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+    ResponseEntity<Object> saveLog(@RequestBody SaveLogDTO saveLogDTO, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 }

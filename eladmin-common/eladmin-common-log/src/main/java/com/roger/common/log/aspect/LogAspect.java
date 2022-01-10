@@ -15,6 +15,9 @@
  */
 package com.roger.common.log.aspect;
 
+import cn.hutool.json.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.roger.api.service.RemoteLogService;
 import com.roger.common.core.constant.SecurityConstants;
 import com.roger.common.core.domain.Log;
@@ -30,8 +33,13 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Zheng Jie
@@ -72,11 +80,34 @@ public class LogAspect {
         currentTime.remove();
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
         SaveLogDTO saveLogDTO = new SaveLogDTO();
-        saveLogDTO.setUsername(getUsername());
+
         saveLogDTO.setBrowser(StringUtils.getBrowser(request));
         saveLogDTO.setIp(StringUtils.getIp(request));
-        saveLogDTO.setJoinPoint(joinPoint);
         saveLogDTO.setLog(log);
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        com.roger.common.log.annotation.Log aopLog = method.getAnnotation(com.roger.common.log.annotation.Log.class);
+        // 方法路径
+        String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
+        //参数值
+        List<String> argValues = new ArrayList<>();
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            argValues.add(arg.toString());
+        }
+        String userName = getUsername();
+        String loginPath = "login";
+        if (loginPath.equals(signature.getName())) {
+            try {
+                userName = new JSONObject(args[0]).get("username").toString();
+            } catch (Exception e) {
+                LogAspect.log.error(e.getMessage(), e);
+            }
+        }
+        saveLogDTO.setUsername(userName);
+        saveLogDTO.setMethodName(methodName);
+        saveLogDTO.setArgValues(argValues);
+        saveLogDTO.setLogDescription(aopLog.value());
         remoteLogService.saveLog(saveLogDTO, SecurityConstants.INNER);
         return result;
     }
@@ -94,10 +125,32 @@ public class LogAspect {
         log.setExceptionDetail(ThrowableUtil.getStackTrace(e).getBytes());
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
         SaveLogDTO saveLogDTO = new SaveLogDTO();
-        saveLogDTO.setUsername(getUsername());
         saveLogDTO.setBrowser(StringUtils.getBrowser(request));
         saveLogDTO.setIp(StringUtils.getIp(request));
-        saveLogDTO.setJoinPoint((ProceedingJoinPoint)joinPoint);
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        com.roger.common.log.annotation.Log aopLog = method.getAnnotation(com.roger.common.log.annotation.Log.class);
+        // 方法路径
+        String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
+        //参数值
+        List<String> argValues = new ArrayList<>();
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            argValues.add(arg.toString());
+        }
+        String userName = getUsername();
+        String loginPath = "login";
+        if (loginPath.equals(signature.getName())) {
+            try {
+                userName = new JSONObject(argValues.get(0)).get("username").toString();
+            } catch (Exception e1) {
+                LogAspect.log.error(e1.getMessage(), e1);
+            }
+        }
+        saveLogDTO.setUsername(userName);
+        saveLogDTO.setMethodName(methodName);
+        saveLogDTO.setArgValues(argValues);
+        saveLogDTO.setLogDescription(aopLog.value());
         saveLogDTO.setLog(log);
         remoteLogService.saveLog(saveLogDTO, SecurityConstants.INNER);
     }

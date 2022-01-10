@@ -17,10 +17,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.roger</groupId>
-            <artifactId>eladmin-common-core</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.roger</groupId>

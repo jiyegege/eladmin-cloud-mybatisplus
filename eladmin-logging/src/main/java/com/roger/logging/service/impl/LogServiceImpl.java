@@ -8,10 +8,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.roger.common.core.domain.Log;
 import com.roger.common.core.domain.base.PageInfo;
 import com.roger.common.core.domain.base.impl.BaseServiceImpl;
-import com.roger.common.core.utils.ConvertUtil;
-import com.roger.common.core.utils.FileUtil;
-import com.roger.common.core.utils.PageUtil;
-import com.roger.common.core.utils.ValidationUtil;
+import com.roger.common.core.domain.dto.SaveLogDTO;
+import com.roger.common.core.utils.*;
 import com.roger.common.security.utils.QueryHelpMybatisPlus;
 import com.roger.logging.domain.dto.LogErrorDTO;
 import com.roger.logging.domain.dto.LogSmallDTO;
@@ -90,42 +88,27 @@ public class LogServiceImpl extends BaseServiceImpl<Log> implements LogService {
     
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log) {
-
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
-        com.roger.common.log.annotation.Log aopLog = method.getAnnotation(com.roger.common.log.annotation.Log.class);
-
-        // 方法路径
-        String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
+    public void save(SaveLogDTO saveLogDTO) {
+        Log log = saveLogDTO.getLog();
 
         StringBuilder params = new StringBuilder("{");
         //参数值
-        List<Object> argValues = new ArrayList<>(Arrays.asList(joinPoint.getArgs()));
+        List<String> argValues = saveLogDTO.getArgValues();
         //参数名称
-        for (Object argValue : argValues) {
+        for (String argValue : argValues) {
             params.append(argValue).append(" ");
         }
         // 描述
         if (log != null) {
-            log.setDescription(aopLog.value());
+            log.setDescription(saveLogDTO.getLogDescription());
         }
         assert log != null;
-        log.setRequestIp(ip);
-
-        String loginPath = "login";
-        if (loginPath.equals(signature.getName())) {
-            try {
-                username = new JSONObject(argValues.get(0)).get("username").toString();
-            } catch (Exception e) {
-                LogServiceImpl.log.error(e.getMessage(), e);
-            }
-        }
+        log.setRequestIp(saveLogDTO.getIp());
         //log.setAddress(StringUtils.getCityInfo(log.getRequestIp()));
-        log.setMethod(methodName);
-        log.setUsername(username);
-        log.setParams(params.toString() + " }");
-        log.setBrowser(browser);
+        log.setMethod(saveLogDTO.getMethodName());
+        log.setUsername(saveLogDTO.getUsername());
+        log.setParams(params + " }");
+        log.setBrowser(saveLogDTO.getBrowser());
         if (log.getId() == null) {
             logMapper.insert(log);
         } else {

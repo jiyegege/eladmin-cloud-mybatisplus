@@ -9,17 +9,17 @@ public class ServiceNameConstants {
     /**
      * 系统核心模块
      */
-    public static final String ELADMIN_SYSTEM_CORE = "eladmin_system_core";
+    public static final String ELADMIN_SYSTEM_CORE = "eladmin-system-core";
     /**
      * 授权模块
      */
-    public static final String ELADMIN_AUTH = "eladmin_auth";
+    public static final String ELADMIN_AUTH = "eladmin-auth";
     /**
      * 日志模块
      */
-    public static final String ELADMIN_LOG = "eladmin_log";
+    public static final String ELADMIN_LOG = "eladmin-logging";
     /**
      * 工具模块
      */
-    public static final String ELADMIN_TOOLS = "eladmin_tools";
+    public static final String ELADMIN_TOOLS = "eladmin-tools";
 }

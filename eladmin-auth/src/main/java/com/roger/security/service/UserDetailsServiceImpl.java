@@ -15,6 +15,9 @@
  */
 package com.roger.security.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.roger.api.service.RemoteUserService;
 import com.roger.common.core.constant.ElAdminConstant;
 import com.roger.common.core.constant.SecurityConstants;
@@ -26,13 +29,17 @@ import com.roger.common.core.utils.RedisUtils;
 import com.roger.common.security.utils.UserCacheClean;
 import com.roger.security.config.LoginProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +65,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.loginProperties.setCacheEnable(enableCache);
     }
 
+    @SneakyThrows
     @Override
     public JwtUserDto loadUserByUsername(String username) {
         boolean searchDb = true;
@@ -83,7 +91,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     throw new BadRequestException("账号未激活！");
                 }
                 List<Long> dataScopes = Objects.requireNonNull(remoteUserService.getUserDataScope(user.getDeptId(), user.getId(), SecurityConstants.INNER).getBody());
-                List<GrantedAuthority> authorities = Objects.requireNonNull(remoteUserService.getUserAuthorities(user.getIsAdmin(), user.getId(), SecurityConstants.INNER).getBody());
+                //ResponseEntity<Object> responseEntity= Objects.requireNonNull(remoteUserService.getUserAuthorities(user.getIsAdmin(), user.getId(), SecurityConstants.INNER));
+                String authoritiesString = Objects.requireNonNull(remoteUserService.getUserAuthorities(user.getIsAdmin(), user.getId(), SecurityConstants.INNER).getBody());
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(authoritiesString);
+                Iterator<JsonNode> elements = jsonNode.elements();
+                while (elements.hasNext()) {
+                    JsonNode next = elements.next();
+                    JsonNode authority = next.get("authority");
+                    //将得到的值放入链表 最终返回该链表
+                    authorities.add(new SimpleGrantedAuthority(authority.asText()));
+                }
                 jwtUserDto = new JwtUserDto(user, dataScopes, authorities);
                 redisUtils.set(ElAdminConstant.USER_INFO_CACHE_PREFIX+username, jwtUserDto, 7, TimeUnit.DAYS);
             }

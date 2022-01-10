@@ -115,7 +115,7 @@ public class LogController {
     @PostMapping
     @ApiOperation("保存日志")
     public ResponseEntity<Object> saveLog(@Validated @RequestBody SaveLogDTO saveLogDTO){
-        logService.save(saveLogDTO.getUsername(), saveLogDTO.getBrowser(), saveLogDTO.getIp(), saveLogDTO.getJoinPoint(), saveLogDTO.getLog());
+        logService.save(saveLogDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

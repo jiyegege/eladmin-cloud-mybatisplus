@@ -3,6 +3,7 @@ package com.roger.logging.service;
 import com.roger.common.core.domain.Log;
 import com.roger.common.core.domain.base.BaseService;
 import com.roger.common.core.domain.base.PageInfo;
+import com.roger.common.core.domain.dto.SaveLogDTO;
 import com.roger.logging.domain.dto.LogSmallDTO;
 import com.roger.logging.domain.query.LogQueryParam;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -55,7 +56,7 @@ public interface LogService  extends BaseService<Log> {
      * @param log 日志实体
      */
     @Async
-    void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log);
+    void save(SaveLogDTO saveLogDTO);
 
     /**
      * 查询异常详情

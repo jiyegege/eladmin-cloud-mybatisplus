@@ -7,6 +7,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @Author: Roger
@@ -18,7 +19,6 @@ public class SaveLogDTO {
     /**
      * 用户名
      */
-    @NotBlank
     @ApiModelProperty("用户名")
     private String username;
     /**
@@ -32,15 +32,27 @@ public class SaveLogDTO {
     @ApiModelProperty("IP")
     private String ip;
     /**
-     * 切面切入点信息
-     */
-    @NotNull
-    @ApiModelProperty("切面切入点信息")
-    private ProceedingJoinPoint joinPoint;
-    /**
      * 日志对象
      */
     @NotNull
     @ApiModelProperty("日志对象")
     private Log log;
+
+    /**
+     * 方法名
+     */
+    @ApiModelProperty("方法名")
+    private String methodName;
+
+    /**
+     * 方法参数
+     */
+    @ApiModelProperty("方法参数")
+    private List<String> argValues;
+
+    /**
+     * 日志描述
+     */
+    @ApiModelProperty("日志描述")
+    private String logDescription;
 }

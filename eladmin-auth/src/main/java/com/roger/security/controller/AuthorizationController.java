@@ -81,7 +81,7 @@ public class AuthorizationController {
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
         // 密码解密
         String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
-        // 查询验证码
+        /*// 查询验证码
         String code = (String) redisUtils.get(authUser.getUuid());
         // 清除验证码
         redisUtils.del(authUser.getUuid());
@@ -90,7 +90,7 @@ public class AuthorizationController {
         }
         if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
             throw new BadRequestException("验证码错误");
-        }
+        }*/
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -120,7 +120,7 @@ public class AuthorizationController {
     }
 
     @ApiOperation("获取验证码")
-    @AnonymousGetMapping(value = "/code")
+    @GetMapping(value = "/code")
     public ResponseEntity<Object> getCode() {
         // 获取运算的结果
         Captcha captcha = loginProperties.getCaptcha();

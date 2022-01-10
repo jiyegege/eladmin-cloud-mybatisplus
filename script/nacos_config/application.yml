@@ -1,0 +1,102 @@
+spring:
+  freemarker:
+    check-template-location: false
+  jackson:
+    time-zone: GMT+8
+  data:
+    redis:
+      repositories:
+        enabled: false
+  cloud:
+    gateway:
+      routes:
+        # 代码生成服务
+        - id: eladmin-generator
+          uri: lb://eladmin-generator
+          predicates:
+            - Path=/api/genConfig/**,/api/generator/**
+        # 认证授权服务
+        - id: eladmin-auth
+          uri: lb://eladmin-auth
+          predicates:
+            - Path=/auth/**
+
+feign:
+  hystrix:
+    enable: true
+
+# 配置mybatis-plus
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.roger.**.entity
+  global-config:
+    db-config:
+      #主键类型：自增
+      id-type: auto
+      #插入字段策略：非空判断
+      insert-strategy: not_null
+      #更新字段策略：非空判断
+      update-strategy: not_null
+      #查询字段策略：非空判断
+      where-strategy: not_null
+  configuration:
+    #配置返回数据库(column下划线命名&&返回java实体是驼峰命名)，自动匹配无需as（没开启这个，SQL需要写as： select user_id as userId）
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull, oracle数据库必须配置
+    jdbc-type-for-null: 'null'
+
+task:
+  pool:
+    # 核心线程池大小
+    core-pool-size: 10
+    # 最大线程数
+    max-pool-size: 30
+    # 活跃时间
+    keep-alive-seconds: 60
+    # 队列容量
+    queue-capacity: 50
+
+#七牛云
+qiniu:
+  # 文件大小 /M
+  max-size: 15
+
+#邮箱验证码有效时间/秒
+code:
+  expiration: 300
+
+#密码加密传输，前端公钥加密，后端私钥解密
+rsa:
+  private_key: MIIBUwIBADANBgkqhkiG9w0BAQEFAASCAT0wggE5AgEAAkEA0vfvyTdGJkdbHkB8mp0f3FE0GYP3AYPaJF7jUd1M0XxFSE2ceK3k2kw20YvQ09NJKk+OMjWQl9WitG9pB6tSCQIDAQABAkA2SimBrWC2/wvauBuYqjCFwLvYiRYqZKThUS3MZlebXJiLB+Ue/gUifAAKIg1avttUZsHBHrop4qfJCwAI0+YRAiEA+W3NK/RaXtnRqmoUUkb59zsZUBLpvZgQPfj1MhyHDz0CIQDYhsAhPJ3mgS64NbUZmGWuuNKp5coY2GIj/zYDMJp6vQIgUueLFXv/eZ1ekgz2Oi67MNCk5jeTF2BurZqNLR3MSmUCIFT3Q6uHMtsB9Eha4u7hS31tj1UWE+D+ADzp59MGnoftAiBeHT7gDMuqeJHPL4b+kC+gzV4FGTfhR9q3tTbklZkD2A==
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+    org.springframework.cloud.loadbalancer: debug
+    org.springframework.web.reactive: debug
+
+tianyu:
+  bdp:
+    filter:
+      #需要进行过滤的白名单
+      allowPaths:
+        - /auth/login
+        - /auth/code
+        - /auth/logout
+        - /*.html
+        - /**/*.html
+        - /**/*.css
+        - /**/*.js
+        - /webSocket/**
+        - /swagger-ui.html
+        - /swagger-resources/**
+        - /webjars/**
+        - /*/api-docs
+        - /avatar/**
+        - /file/**
+        - /druid/**

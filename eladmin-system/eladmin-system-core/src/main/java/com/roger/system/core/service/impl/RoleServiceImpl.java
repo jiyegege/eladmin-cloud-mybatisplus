@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.roger.common.core.config.CustomAuthorityDeserializer;
 import com.roger.common.core.domain.base.PageInfo;
 import com.roger.common.security.utils.QueryHelpMybatisPlus;
 import com.roger.common.core.domain.base.impl.BaseServiceImpl;
@@ -224,7 +226,7 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
     }
 
     @Override
-    @Cacheable(key = "'auth:' + #p0.id")
+    @Cacheable(key = "'auth:' + #p1")
     public List<GrantedAuthority> mapToGrantedAuthorities(Boolean isAdmin, Long userId) {
         Set<String> permissions = new HashSet<>();
         // 如果是管理员直接返回

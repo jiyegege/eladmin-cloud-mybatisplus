@@ -43,10 +43,8 @@ public class UserDto extends DataDto implements Serializable {
 
     private String avatarPath;
 
-    @JsonIgnore
     private String password;
 
-    @JsonIgnore
     private Boolean isAdmin;
 
     private Boolean enabled;

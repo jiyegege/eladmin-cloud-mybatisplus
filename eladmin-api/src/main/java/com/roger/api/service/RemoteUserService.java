@@ -37,7 +37,7 @@ public interface RemoteUserService {
      * @return 用户授权信息
      */
     @GetMapping(value = "/api/users/{userId}/authorities")
-    ResponseEntity<List<GrantedAuthority>> getUserAuthorities(@RequestParam("isAdmin") Boolean isAdmin, @PathVariable("userId") Long userId, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+    ResponseEntity<String> getUserAuthorities(@RequestParam("isAdmin") Boolean isAdmin, @PathVariable("userId") Long userId, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 
     /**
      * 通过用户ID和部门ID获取用户的数据权限

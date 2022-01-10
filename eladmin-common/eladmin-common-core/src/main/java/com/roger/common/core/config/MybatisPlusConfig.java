@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * Created by jinjin on 2020-09-21.
  */
 @Configuration
-@MapperScan(basePackages ={"me.zhengjie.**.mapper"})
+@MapperScan(basePackages ={"com.roger.**.mapper"})
 public class MybatisPlusConfig {
     @Bean
     public MybatisPlusInterceptor paginationInterceptor() {

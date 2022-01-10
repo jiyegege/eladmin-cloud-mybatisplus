@@ -1,0 +1,41 @@
+server:
+  port: 19001
+
+spring:
+  application:
+    name: eladmin-gateway
+  profiles:
+    # 环境配置
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.211.55.25:8848
+      config:
+        # 配置中心地址
+        server-addr: 10.211.55.25:8848
+        # 配置文件格式
+        file-extension: yml
+        extension-configs[0]:
+          # 配置文件名-Data Id
+          data-id: application.${spring.cloud.nacos.config.file-extension}
+          # 是否动态刷新，默认为false
+          refresh: false
+        # 共享配置
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true
+      httpserver:
+        wiretap: true
+      httpclient:
+        wiretap: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
