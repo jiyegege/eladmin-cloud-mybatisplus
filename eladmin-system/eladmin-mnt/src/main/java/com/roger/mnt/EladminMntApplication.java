@@ -19,6 +19,7 @@ import com.roger.common.core.utils.SpringContextHolder;
 import io.swagger.annotations.Api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(hidden = true)
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.roger.*"})
+@EnableFeignClients(basePackages = {"com.roger.api.service"})
 @EnableTransactionManagement
 public class EladminMntApplication {
 

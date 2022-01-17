@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: eladmin-mnt
+  profiles:
+    # 环境配置
+    active: dev
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       discovery:
