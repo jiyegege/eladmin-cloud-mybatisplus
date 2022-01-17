@@ -57,6 +57,7 @@
         <mica-ip2region.version>2.5.6</mica-ip2region.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <mysql-connector-java.version>8.0.27</mysql-connector-java.version>
+        <transmittable-thread-local.version>2.12.2</transmittable-thread-local.version>
     </properties>
 
     <dependencyManagement>
@@ -309,6 +310,12 @@
                 <groupId>com.roger</groupId>
                 <artifactId>eladmin-common-security</artifactId>
                 <version>${eladmin.project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
             </dependency>
 
         </dependencies>

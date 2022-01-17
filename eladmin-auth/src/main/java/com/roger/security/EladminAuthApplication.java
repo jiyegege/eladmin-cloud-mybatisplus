@@ -14,7 +14,8 @@ import org.springframework.context.annotation.ComponentScan;
  * gateway application
  * @author roger
  */
-@SpringBootApplication(scanBasePackages = {"com.roger", "com.roger.api.service"})
+@SpringBootApplication
+@ComponentScan(basePackages = {"com.roger.*"})
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.roger.api.service")
 public class EladminAuthApplication {

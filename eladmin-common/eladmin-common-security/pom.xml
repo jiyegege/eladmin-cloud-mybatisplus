@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.roger</groupId>
-            <artifactId>eladmin-common-core</artifactId>
+            <artifactId>eladmin-api</artifactId>
         </dependency>
     </dependencies>
 

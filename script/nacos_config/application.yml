@@ -20,6 +20,31 @@ spring:
           uri: lb://eladmin-auth
           predicates:
             - Path=/auth/**
+        # 系统核心模块
+        - id: eladmin-system-core
+          uri: lb://eladmin-system-core
+          predicates:
+            - Path=/api/dept/**,/api/dict/**,/api/dictDetail/**,/api/job/**,/api/limit/**,/api/menus/**,/api/monitor/**,/api/roles/**,/api/code/**,/api/users/**
+        # 日志服务
+        - id: eladmin-logging
+          uri: lb://eladmin-logging
+          predicates:
+            - Path=/api/logs/**
+        # 运维服务
+        - id: eladmin-mnt
+          uri: lb://eladmin-mnt
+          predicates:
+            - Path=/api/app/**,/api/database/**,/api/deploy/**,/api/deployHistory/**,/api/serverDeploy/**
+        # 定时任务服务
+        - id: eladmin-quartz
+          uri: lb://eladmin-quartz
+          predicates:
+            - Path=/api/jobs/**
+        # 工具服务
+        - id: eladmin-tools
+          uri: lb://eladmin-tools
+          predicates:
+            - Path=/api/aliPay/**,/api/email/**,/api/localStorage/**,/api/qiNiuContent/**
 
 feign:
   hystrix:

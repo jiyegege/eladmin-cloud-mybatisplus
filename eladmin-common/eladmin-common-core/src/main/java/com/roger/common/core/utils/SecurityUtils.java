@@ -18,14 +18,15 @@ package com.roger.common.core.utils;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.roger.common.core.exception.BadRequestException;
 import com.roger.common.core.constant.enums.DataScopeEnum;
+import com.roger.common.core.domain.dto.JwtUserDto;
+import com.roger.common.core.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
 import java.util.List;
 
 /**
@@ -41,16 +42,11 @@ public class SecurityUtils {
      * @return UserDetails
      */
     public static UserDetails getCurrentUser() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new BadRequestException(HttpStatus.UNAUTHORIZED, "当前登录状态过期");
+        final JwtUserDto userDto = SecurityContextHolder.getLoginUser();
+        if (userDto == null) {
+            throw new BadRequestException(HttpStatus.UNAUTHORIZED, "找不到当前登录的信息");
         }
-        if (authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            UserDetailsService userDetailsService = SpringContextHolder.getBean(UserDetailsService.class);
-            return userDetailsService.loadUserByUsername(userDetails.getUsername());
-        }
-        throw new BadRequestException(HttpStatus.UNAUTHORIZED, "找不到当前登录的信息");
+        return userDto;
     }
 
     /**
@@ -59,12 +55,11 @@ public class SecurityUtils {
      * @return 系统用户名称
      */
     public static String getCurrentUsername() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new BadRequestException(HttpStatus.UNAUTHORIZED, "当前登录状态过期");
+        final JwtUserDto userDto = SecurityContextHolder.getLoginUser();
+        if (userDto == null) {
+            throw new BadRequestException(HttpStatus.UNAUTHORIZED, "找不到当前登录的信息");
         }
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return userDetails.getUsername();
+        return userDto.getUsername();
     }
 
     /**

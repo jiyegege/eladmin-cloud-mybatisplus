@@ -30,4 +30,8 @@ public class SecurityConstants {
      * 授权信息字段
      */
     public static final String AUTHORIZATION_HEADER = "authorization";
+
+    public static final String LOGIN_USER_AUTHORIZATION = "login_user_authorization";
+
+    public static final String LOGIN_USER = "login_user";
 }

@@ -16,7 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * <p>
@@ -37,9 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint authenticationErrorHandler;
     @Autowired
     private JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
     @Autowired
-    private CorsFilter corsFilter;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
@@ -66,13 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors()
                 // 关闭 CSRF
                 .and().csrf().disable()
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                // 授权异常
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationErrorHandler)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
                 // 防止iframe 造成跨域
-                .and()
                 .headers().frameOptions().disable()
                 // 不创建会话
                 .and()
@@ -92,13 +91,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 // 登出行为由自己实现，参考 AuthController#logout
                 .and().logout().disable()
+                .formLogin().disable()
+                .httpBasic().disable()
                 // Session 管理
                 .sessionManagement()
                 // 因为使用了JWT，所以这里不管理Session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                // 异常处理
-                .and().exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+                // 授权异常
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationErrorHandler)
+                .accessDeniedHandler(jwtAccessDeniedHandler);
         // @formatter:on
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
