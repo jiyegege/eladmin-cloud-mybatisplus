@@ -80,10 +80,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
 
-                // 认证请求
-                .antMatchers("/auth/login").permitAll()
-                .antMatchers("/auth/code").permitAll()
-                .antMatchers("/auth/logout").permitAll()
                 // 放行OPTIONS请求
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // 所有请求都需要登录访问
