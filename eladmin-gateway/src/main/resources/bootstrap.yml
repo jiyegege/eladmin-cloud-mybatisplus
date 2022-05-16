@@ -12,10 +12,10 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 10.211.55.25:8848
+        server-addr: 192.168.3.14:8848
       config:
         # 配置中心地址
-        server-addr: 10.211.55.25:8848
+        server-addr: 192.168.3.14:8848
         # 配置文件格式
         file-extension: yml
         extension-configs[0]:

@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.roger.common.core.config.MybatisPlusFillHandler,\
-    com.roger.common.core.config.MybatisPlusConfig
