@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -37,20 +38,27 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
     /** 文件配置 */
     private final FileProperties properties;
 
+    private static final long MAX_AGE_SECS = 3600;
+
     public ConfigurerAdapter(FileProperties properties) {
         this.properties = properties;
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+    /**
+     * 跨域配置
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        //对那些请求路径进行跨域处理
+        registry.addMapping("/**")
+                // 允许的请求头，默认允许所有的请求头
+                .allowedHeaders("*")
+                // 允许的方法，默认允许GET、POST、HEAD
+                .allowedMethods("*")
+                // 探测请求有效时间，单位秒
+                .maxAge(MAX_AGE_SECS)
+                // 支持的域
+                .allowedOrigins("*");
     }
 
     @Override

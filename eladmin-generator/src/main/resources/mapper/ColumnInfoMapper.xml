@@ -25,7 +25,7 @@
         and table_name like #{name} order by create_time desc
     </select>
     <select id="queryColumnInfo" resultType="com.roger.generator.domain.ColumnInfo">
-        select '${tableName}' as table_name, column_name, if(is_nullable='NO',true, false) as not_null, data_type as column_type,
+        select table_name, column_name, if(is_nullable='NO',true, false) as not_null, data_type as column_type,
            column_comment as remark, column_key as key_type, extra
         from information_schema.columns
         where table_name = #{tableName} and table_schema = (select database()) order by ordinal_position

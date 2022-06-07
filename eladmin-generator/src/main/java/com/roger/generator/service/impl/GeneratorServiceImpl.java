@@ -155,7 +155,7 @@ public class GeneratorServiceImpl extends BaseServiceImpl<ColumnInfo> implements
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void save(List<ColumnInfo> columnInfos) {
         for (ColumnInfo info: columnInfos) {
             if (info.getId() == null) {
